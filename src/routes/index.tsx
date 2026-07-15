@@ -59,12 +59,13 @@ function Header() {
     <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-background/60 border-b border-border/40">
       <div className="mx-auto max-w-7xl px-6 h-20 flex items-center justify-between">
         <a href="#home" className="flex items-center gap-3">
-          <img src={logoAsset.url} alt="SAANSA Productions" className="h-12 w-12 object-contain" />
-          <div className="hidden sm:block leading-tight">
-            <div className="text-sm tracking-[0.3em] text-gold font-medium">SAANSA</div>
-            <div className="text-[10px] tracking-[0.4em] text-muted-foreground">PRODUCTIONS</div>
-          </div>
+          <img
+            src={logoAsset.url}
+            alt="SAANSA Productions"
+            className="h-20 w-20 md:h-24 md:w-24 object-contain drop-shadow-[0_0_25px_rgba(212,175,55,0.6)] brightness-125 contrast-125"
+          />
         </a>
+
         <nav className="hidden lg:flex items-center gap-8">
           {nav.map((n) => (
             <a
