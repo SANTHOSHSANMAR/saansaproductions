@@ -77,14 +77,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "SAANSA Productions — Film Production & Anti-Leak Security" },
+      { name: "description", content: "SAANSA Productions — a Tamil Nadu film production house with SecureReel, an end-to-end anti-leak chain-of-custody platform." },
+      { name: "author", content: "SAANSA Productions" },
+      { property: "og:title", content: "SAANSA Productions" },
+      { property: "og:description", content: "Films and the platform that protects them." },
       { property: "og:type", content: "website" },
+      { property: "og:site_name", content: "SAANSA Productions" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
       {
