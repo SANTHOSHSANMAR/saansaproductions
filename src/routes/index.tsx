@@ -500,16 +500,10 @@ function Contact() {
           we'll get back with a proposal within 24 hours.
         </p>
         <div className="flex flex-wrap justify-center gap-4 mb-16">
-          <a
-            href="mailto:hello@saansaproductions.com"
-            className="inline-flex items-center gap-2 rounded-md bg-gold text-primary-foreground px-8 py-4 text-sm font-semibold hover:bg-gold-soft transition-colors"
-          >
+          <a href="mailto:hello@saansaproductions.com" className="btn-cinematic">
             hello@saansaproductions.com
           </a>
-          <a
-            href="#slate"
-            className="inline-flex items-center gap-2 rounded-md border border-border px-8 py-4 text-sm font-medium hover:border-gold/50 transition-colors"
-          >
+          <a href="#slate" className="btn-ghost-gold">
             View Slate
           </a>
         </div>
