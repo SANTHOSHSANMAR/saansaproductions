@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import logoAsset from "../assets/saansa-productions-logo.png.asset.json";
 import heroVideo from "../assets/hero-cinematic.mp4.asset.json";
 import slateVideo from "../assets/hero-film-bg.mp4.asset.json";
+import heroPoster from "../assets/hero-poster.jpg";
 
 export const Route = createFileRoute("/")({
   component: Index,
