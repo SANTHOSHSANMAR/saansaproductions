@@ -92,19 +92,25 @@ function Header() {
 
 function Hero() {
   return (
-    <section id="home" className="relative min-h-screen flex items-center overflow-hidden pt-28 md:pt-32">
+    <section
+      id="home"
+      className="film-grain vignette relative min-h-screen flex items-center overflow-hidden pt-24 sm:pt-28 md:pt-32"
+    >
       <video
         className="absolute inset-0 w-full h-full object-cover"
         src={heroVideo.url}
+        poster={heroPoster}
+        preload="metadata"
         autoPlay
         loop
         muted
         playsInline
+        aria-hidden="true"
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-background/85 via-background/70 to-background" />
-      <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/40 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-b from-background/85 via-background/70 to-background z-[1]" />
+      <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/40 to-transparent z-[1]" />
 
-      <div className="relative mx-auto max-w-7xl px-6 py-24 w-full">
+      <div className="relative z-10 mx-auto max-w-7xl px-6 py-24 w-full">
         <div className="max-w-3xl">
           <div className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/5 px-4 py-1.5 mb-8">
             <span className="h-1.5 w-1.5 rounded-full bg-gold animate-pulse" />
@@ -123,23 +129,11 @@ function Hero() {
             proprietary end-to-end chain-of-custody platform for film content.
           </p>
           <div className="mt-10 flex flex-wrap gap-4">
-            <a
-              href="#contact"
-              className="inline-flex items-center gap-2 rounded-md bg-gold text-primary-foreground px-6 py-3.5 text-sm font-semibold hover:bg-gold-soft transition-colors"
-            >
+            <a href="#contact" className="btn-cinematic">
               Start a Project <span aria-hidden>→</span>
             </a>
-            <a
-              href="#securereel"
-              className="inline-flex items-center gap-2 rounded-md border border-border bg-card/40 backdrop-blur px-6 py-3.5 text-sm font-medium hover:border-gold/50 transition-colors"
-            >
+            <a href="#securereel" className="btn-ghost-gold">
               Explore SecureReel
-            </a>
-            <a
-              href="#slate"
-              className="inline-flex items-center gap-2 rounded-md px-6 py-3.5 text-sm font-medium text-foreground/80 hover:text-gold transition-colors"
-            >
-              View Our Slate
             </a>
           </div>
 
@@ -160,7 +154,7 @@ function Hero() {
           </div>
         </div>
       </div>
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-[10px] tracking-[0.4em] text-muted-foreground uppercase">
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-[10px] tracking-[0.4em] text-muted-foreground uppercase z-10">
         Scroll
       </div>
     </section>
