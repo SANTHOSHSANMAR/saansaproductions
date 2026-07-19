@@ -528,13 +528,13 @@ function Footer() {
   return (
     <footer className="border-t border-border/60 bg-card/40">
       <div className="mx-auto max-w-7xl px-6 py-12 flex flex-col md:flex-row items-center justify-between gap-6">
-        <div className="flex items-center gap-3">
-          <img src={logoAsset.url} alt="SAANSA Productions" className="h-10 w-10 object-contain" />
-          <div className="leading-tight">
-            <div className="text-sm tracking-[0.3em] text-gold">SAANSA</div>
-            <div className="text-[10px] tracking-[0.4em] text-muted-foreground">PRODUCTIONS</div>
-          </div>
-        </div>
+        <a href="#home" className="flex items-center shrink-0" aria-label="SAANSA Productions home">
+          <img
+            src={logoAsset.url}
+            alt="SAANSA Productions"
+            className="logo-glow h-14 w-14 sm:h-16 sm:w-16 object-contain"
+          />
+        </a>
         <p className="text-xs text-muted-foreground text-center">
           © {new Date().getFullYear()} SAANSA Productions. Films & SecureReel platform. All rights reserved.
         </p>
