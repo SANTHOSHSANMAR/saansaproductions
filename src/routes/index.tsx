@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import logoAsset from "../assets/saansa-productions-logo.png.asset.json";
-import heroVideo from "../assets/hero-film-bg.mp4.asset.json";
+import heroVideo from "../assets/hero-cinematic.mp4.asset.json";
+import slateVideo from "../assets/hero-film-bg.mp4.asset.json";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -56,13 +57,13 @@ function Index() {
 
 function Header() {
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-background/60 border-b border-border/40">
-      <div className="mx-auto max-w-7xl px-6 h-20 flex items-center justify-between">
-        <a href="#home" className="flex items-center gap-3">
+    <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-background/70 border-b border-gold/20">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 h-24 sm:h-28 md:h-32 flex items-center justify-between gap-3">
+        <a href="#home" className="flex items-center shrink-0" aria-label="SAANSA Productions home">
           <img
             src={logoAsset.url}
             alt="SAANSA Productions"
-            className="h-20 w-20 md:h-24 md:w-24 object-contain drop-shadow-[0_0_25px_rgba(212,175,55,0.6)] brightness-125 contrast-125"
+            className="logo-glow h-20 w-20 sm:h-24 sm:w-24 md:h-28 md:w-28 lg:h-32 lg:w-32 object-contain"
           />
         </a>
 
@@ -90,7 +91,7 @@ function Header() {
 
 function Hero() {
   return (
-    <section id="home" className="relative min-h-screen flex items-center overflow-hidden pt-20">
+    <section id="home" className="relative min-h-screen flex items-center overflow-hidden pt-28 md:pt-32">
       <video
         className="absolute inset-0 w-full h-full object-cover"
         src={heroVideo.url}
@@ -396,7 +397,7 @@ function Slate() {
               <div className="relative aspect-[4/5] overflow-hidden bg-gradient-to-br from-background via-card to-background">
                 <video
                   className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-60 transition-opacity"
-                  src={heroVideo.url}
+                  src={slateVideo.url}
                   autoPlay
                   loop
                   muted
