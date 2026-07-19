@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import logoAsset from "../assets/saansa-productions-logo.png.asset.json";
 import heroVideo from "../assets/hero-cinematic.mp4.asset.json";
 import slateVideo from "../assets/hero-film-bg.mp4.asset.json";
+import heroPoster from "../assets/hero-poster.jpg";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -58,21 +59,21 @@ function Index() {
 function Header() {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-background/70 border-b border-gold/20">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 h-24 sm:h-28 md:h-32 flex items-center justify-between gap-3">
+      <div className="mx-auto max-w-7xl px-3 sm:px-5 md:px-6 h-20 sm:h-24 md:h-28 lg:h-32 flex items-center justify-between gap-2 sm:gap-4">
         <a href="#home" className="flex items-center shrink-0" aria-label="SAANSA Productions home">
           <img
             src={logoAsset.url}
             alt="SAANSA Productions"
-            className="logo-glow h-20 w-20 sm:h-24 sm:w-24 md:h-28 md:w-28 lg:h-32 lg:w-32 object-contain"
+            className="logo-glow h-16 w-16 sm:h-20 sm:w-20 md:h-24 md:w-24 lg:h-28 lg:w-28 xl:h-32 xl:w-32 object-contain"
           />
         </a>
 
-        <nav className="hidden lg:flex items-center gap-8">
+        <nav className="hidden lg:flex items-center gap-6 xl:gap-9">
           {nav.map((n) => (
             <a
               key={n.href}
               href={n.href}
-              className="text-sm text-foreground/80 hover:text-gold transition-colors"
+              className="relative text-[13px] tracking-[0.2em] uppercase text-foreground/75 hover:text-gold transition-colors after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-px after:w-0 after:bg-gold after:transition-all hover:after:w-full"
             >
               {n.label}
             </a>
@@ -80,7 +81,7 @@ function Header() {
         </nav>
         <a
           href="#contact"
-          className="hidden md:inline-flex items-center rounded-md border border-gold/60 bg-gold/10 text-gold hover:bg-gold hover:text-primary-foreground transition-colors px-5 py-2.5 text-sm font-medium"
+          className="hidden md:inline-flex btn-cinematic !py-2.5 !px-5 !text-[11px]"
         >
           Get in Touch
         </a>
@@ -91,19 +92,25 @@ function Header() {
 
 function Hero() {
   return (
-    <section id="home" className="relative min-h-screen flex items-center overflow-hidden pt-28 md:pt-32">
+    <section
+      id="home"
+      className="film-grain vignette relative min-h-screen flex items-center overflow-hidden pt-24 sm:pt-28 md:pt-32"
+    >
       <video
         className="absolute inset-0 w-full h-full object-cover"
         src={heroVideo.url}
+        poster={heroPoster}
+        preload="metadata"
         autoPlay
         loop
         muted
         playsInline
+        aria-hidden="true"
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-background/85 via-background/70 to-background" />
-      <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/40 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-b from-background/85 via-background/70 to-background z-[1]" />
+      <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/40 to-transparent z-[1]" />
 
-      <div className="relative mx-auto max-w-7xl px-6 py-24 w-full">
+      <div className="relative z-10 mx-auto max-w-7xl px-6 py-24 w-full">
         <div className="max-w-3xl">
           <div className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/5 px-4 py-1.5 mb-8">
             <span className="h-1.5 w-1.5 rounded-full bg-gold animate-pulse" />
@@ -122,23 +129,11 @@ function Hero() {
             proprietary end-to-end chain-of-custody platform for film content.
           </p>
           <div className="mt-10 flex flex-wrap gap-4">
-            <a
-              href="#contact"
-              className="inline-flex items-center gap-2 rounded-md bg-gold text-primary-foreground px-6 py-3.5 text-sm font-semibold hover:bg-gold-soft transition-colors"
-            >
+            <a href="#contact" className="btn-cinematic">
               Start a Project <span aria-hidden>→</span>
             </a>
-            <a
-              href="#securereel"
-              className="inline-flex items-center gap-2 rounded-md border border-border bg-card/40 backdrop-blur px-6 py-3.5 text-sm font-medium hover:border-gold/50 transition-colors"
-            >
+            <a href="#securereel" className="btn-ghost-gold">
               Explore SecureReel
-            </a>
-            <a
-              href="#slate"
-              className="inline-flex items-center gap-2 rounded-md px-6 py-3.5 text-sm font-medium text-foreground/80 hover:text-gold transition-colors"
-            >
-              View Our Slate
             </a>
           </div>
 
@@ -159,7 +154,7 @@ function Hero() {
           </div>
         </div>
       </div>
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-[10px] tracking-[0.4em] text-muted-foreground uppercase">
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-[10px] tracking-[0.4em] text-muted-foreground uppercase z-10">
         Scroll
       </div>
     </section>
@@ -505,16 +500,10 @@ function Contact() {
           we'll get back with a proposal within 24 hours.
         </p>
         <div className="flex flex-wrap justify-center gap-4 mb-16">
-          <a
-            href="mailto:hello@saansaproductions.com"
-            className="inline-flex items-center gap-2 rounded-md bg-gold text-primary-foreground px-8 py-4 text-sm font-semibold hover:bg-gold-soft transition-colors"
-          >
+          <a href="mailto:hello@saansaproductions.com" className="btn-cinematic">
             hello@saansaproductions.com
           </a>
-          <a
-            href="#slate"
-            className="inline-flex items-center gap-2 rounded-md border border-border px-8 py-4 text-sm font-medium hover:border-gold/50 transition-colors"
-          >
+          <a href="#slate" className="btn-ghost-gold">
             View Slate
           </a>
         </div>
@@ -539,13 +528,13 @@ function Footer() {
   return (
     <footer className="border-t border-border/60 bg-card/40">
       <div className="mx-auto max-w-7xl px-6 py-12 flex flex-col md:flex-row items-center justify-between gap-6">
-        <div className="flex items-center gap-3">
-          <img src={logoAsset.url} alt="SAANSA Productions" className="h-10 w-10 object-contain" />
-          <div className="leading-tight">
-            <div className="text-sm tracking-[0.3em] text-gold">SAANSA</div>
-            <div className="text-[10px] tracking-[0.4em] text-muted-foreground">PRODUCTIONS</div>
-          </div>
-        </div>
+        <a href="#home" className="flex items-center shrink-0" aria-label="SAANSA Productions home">
+          <img
+            src={logoAsset.url}
+            alt="SAANSA Productions"
+            className="logo-glow h-14 w-14 sm:h-16 sm:w-16 object-contain"
+          />
+        </a>
         <p className="text-xs text-muted-foreground text-center">
           © {new Date().getFullYear()} SAANSA Productions. Films & SecureReel platform. All rights reserved.
         </p>
