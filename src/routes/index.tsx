@@ -91,7 +91,7 @@ function Header() {
 
 function Hero() {
   return (
-    <section id="home" className="relative min-h-screen flex items-center overflow-hidden pt-20">
+    <section id="home" className="relative min-h-screen flex items-center overflow-hidden pt-28 md:pt-32">
       <video
         className="absolute inset-0 w-full h-full object-cover"
         src={heroVideo.url}
@@ -397,7 +397,7 @@ function Slate() {
               <div className="relative aspect-[4/5] overflow-hidden bg-gradient-to-br from-background via-card to-background">
                 <video
                   className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-60 transition-opacity"
-                  src={heroVideo.url}
+                  src={slateVideo.url}
                   autoPlay
                   loop
                   muted
