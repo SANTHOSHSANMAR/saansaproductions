@@ -1,8 +1,33 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useRef } from "react";
 import logoAsset from "../assets/saansa-productions-logo.png.asset.json";
-import heroVideo from "../assets/hero-cinematic.mp4.asset.json";
-import slateVideo from "../assets/hero-film-bg.mp4.asset.json";
+import heroVideo from "../assets/hero-filmset-real.mp4.asset.json";
+import slateAnthology from "../assets/slate-anthology.mp4.asset.json";
+import slateWebseries from "../assets/slate-webseries.mp4.asset.json";
+import slateFeature from "../assets/slate-feature.mp4.asset.json";
 import heroPoster from "../assets/hero-poster.jpg";
+
+function useInViewVideo() {
+  const ref = useRef<HTMLVideoElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (typeof IntersectionObserver === "undefined") {
+      void el.play().catch(() => {});
+      return;
+    }
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry?.isIntersecting) void el.play().catch(() => {});
+        else el.pause();
+      },
+      { threshold: 0.2 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  return ref;
+}
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -91,22 +116,24 @@ function Header() {
 }
 
 function Hero() {
+  const videoRef = useInViewVideo();
   return (
     <section
       id="home"
       className="film-grain vignette relative min-h-screen flex items-center overflow-hidden pt-24 sm:pt-28 md:pt-32"
     >
       <video
+        ref={videoRef}
         className="absolute inset-0 w-full h-full object-cover"
         src={heroVideo.url}
         poster={heroPoster}
-        preload="metadata"
-        autoPlay
+        preload="none"
         loop
         muted
         playsInline
         aria-hidden="true"
       />
+
       <div className="absolute inset-0 bg-gradient-to-b from-background/85 via-background/70 to-background z-[1]" />
       <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/40 to-transparent z-[1]" />
 
@@ -353,6 +380,37 @@ function SecureReel() {
   );
 }
 
+function SlateCard({ p }: { p: { tag: string; title: string; meta: string; desc: string; video: string } }) {
+  const videoRef = useInViewVideo();
+  return (
+    <article className="group rounded-lg border border-border bg-background/60 overflow-hidden hover:border-gold/50 transition-colors">
+      <div className="relative aspect-[4/5] overflow-hidden bg-gradient-to-br from-background via-card to-background">
+        <video
+          ref={videoRef}
+          className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-60 transition-opacity"
+          src={p.video}
+          preload="none"
+          loop
+          muted
+          playsInline
+          aria-hidden="true"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
+        <div className="absolute top-6 left-6 text-[10px] tracking-[0.3em] uppercase text-gold">
+          {p.tag}
+        </div>
+        <div className="absolute bottom-6 left-6 right-6">
+          <h3 className="font-display text-2xl mb-1">{p.title}</h3>
+          <div className="text-xs tracking-[0.2em] uppercase text-muted-foreground">{p.meta}</div>
+        </div>
+      </div>
+      <div className="p-6">
+        <p className="text-sm text-foreground/70 leading-relaxed">{p.desc}</p>
+      </div>
+    </article>
+  );
+}
+
 function Slate() {
   const projects = [
     {
@@ -360,22 +418,26 @@ function Slate() {
       title: "Untitled Crime Anthology",
       meta: "Tamil · 6–8 Episodes · OTT",
       desc: "A four-story crime anthology — shot end-to-end under the SecureReel stack. Every script, daily and screener is watermarked and traced. Zero-leak by design.",
+      video: slateAnthology.url,
     },
     {
       tag: "Web Series",
       title: "Regional Originals",
       meta: "Digital-First · Tamil Nadu",
       desc: "Tight, character-driven web series produced with lean crews, real locations, and full end-to-end SecureReel protection from script room to release.",
+      video: slateWebseries.url,
     },
     {
       tag: "Feature Slate",
       title: "Small-Budget Cinema",
       meta: "Theatrical + OTT · Regional",
       desc: "A curated slate of small-budget regional features — thrillers and drama first. Every production is a live proof-of-concept for the SecureReel platform.",
+      video: slateFeature.url,
     },
   ];
   return (
     <section id="slate" className="py-28 md:py-36 bg-card/30 border-y border-border/60">
+
       <div className="mx-auto max-w-7xl px-6">
         <div className="max-w-2xl mb-16">
           <SectionLabel>Our Slate</SectionLabel>
@@ -385,36 +447,10 @@ function Slate() {
         </div>
         <div className="grid md:grid-cols-3 gap-6">
           {projects.map((p) => (
-            <article
-              key={p.title}
-              className="group rounded-lg border border-border bg-background/60 overflow-hidden hover:border-gold/50 transition-colors"
-            >
-              <div className="relative aspect-[4/5] overflow-hidden bg-gradient-to-br from-background via-card to-background">
-                <video
-                  className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-60 transition-opacity"
-                  src={slateVideo.url}
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
-                <div className="absolute top-6 left-6 text-[10px] tracking-[0.3em] uppercase text-gold">
-                  {p.tag}
-                </div>
-                <div className="absolute bottom-6 left-6 right-6">
-                  <h3 className="font-display text-2xl mb-1">{p.title}</h3>
-                  <div className="text-xs tracking-[0.2em] uppercase text-muted-foreground">
-                    {p.meta}
-                  </div>
-                </div>
-              </div>
-              <div className="p-6">
-                <p className="text-sm text-foreground/70 leading-relaxed">{p.desc}</p>
-              </div>
-            </article>
+            <SlateCard key={p.title} p={p} />
           ))}
         </div>
+
       </div>
     </section>
   );
