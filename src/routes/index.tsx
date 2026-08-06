@@ -447,36 +447,10 @@ function Slate() {
         </div>
         <div className="grid md:grid-cols-3 gap-6">
           {projects.map((p) => (
-            <article
-              key={p.title}
-              className="group rounded-lg border border-border bg-background/60 overflow-hidden hover:border-gold/50 transition-colors"
-            >
-              <div className="relative aspect-[4/5] overflow-hidden bg-gradient-to-br from-background via-card to-background">
-                <video
-                  className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-60 transition-opacity"
-                  src={slateVideo.url}
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
-                <div className="absolute top-6 left-6 text-[10px] tracking-[0.3em] uppercase text-gold">
-                  {p.tag}
-                </div>
-                <div className="absolute bottom-6 left-6 right-6">
-                  <h3 className="font-display text-2xl mb-1">{p.title}</h3>
-                  <div className="text-xs tracking-[0.2em] uppercase text-muted-foreground">
-                    {p.meta}
-                  </div>
-                </div>
-              </div>
-              <div className="p-6">
-                <p className="text-sm text-foreground/70 leading-relaxed">{p.desc}</p>
-              </div>
-            </article>
+            <SlateCard key={p.title} p={p} />
           ))}
         </div>
+
       </div>
     </section>
   );
