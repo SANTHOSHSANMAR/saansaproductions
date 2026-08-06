@@ -1,8 +1,33 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useRef } from "react";
 import logoAsset from "../assets/saansa-productions-logo.png.asset.json";
-import heroVideo from "../assets/hero-cinematic.mp4.asset.json";
-import slateVideo from "../assets/hero-film-bg.mp4.asset.json";
+import heroVideo from "../assets/hero-filmset-real.mp4.asset.json";
+import slateAnthology from "../assets/slate-anthology.mp4.asset.json";
+import slateWebseries from "../assets/slate-webseries.mp4.asset.json";
+import slateFeature from "../assets/slate-feature.mp4.asset.json";
 import heroPoster from "../assets/hero-poster.jpg";
+
+function useInViewVideo() {
+  const ref = useRef<HTMLVideoElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (typeof IntersectionObserver === "undefined") {
+      void el.play().catch(() => {});
+      return;
+    }
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry?.isIntersecting) void el.play().catch(() => {});
+        else el.pause();
+      },
+      { threshold: 0.2 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  return ref;
+}
 
 export const Route = createFileRoute("/")({
   component: Index,
