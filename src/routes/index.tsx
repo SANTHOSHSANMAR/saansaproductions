@@ -1,33 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useRef } from "react";
 import logoAsset from "../assets/saansa-productions-logo.png.asset.json";
-import heroVideo from "../assets/hero-filmset-real.mp4.asset.json";
-import slateAnthology from "../assets/slate-anthology.mp4.asset.json";
-import slateWebseries from "../assets/slate-webseries.mp4.asset.json";
-import slateFeature from "../assets/slate-feature.mp4.asset.json";
-import heroPoster from "../assets/hero-poster.jpg";
+import heroLarge from "../assets/hero-tn-1280.mp4.asset.json";
+import heroSmall from "../assets/hero-tn-640.mp4.asset.json";
+import heroPosterAsset from "../assets/hero-tn-poster.jpg.asset.json";
+import anthologyLarge from "../assets/slate-anthology-1280.mp4.asset.json";
+import anthologySmall from "../assets/slate-anthology-640.mp4.asset.json";
+import webseriesLarge from "../assets/slate-webseries-1280.mp4.asset.json";
+import webseriesSmall from "../assets/slate-webseries-640.mp4.asset.json";
+import featureLarge from "../assets/slate-feature-1280.mp4.asset.json";
+import featureSmall from "../assets/slate-feature-640.mp4.asset.json";
+import { useSmallScreen, useVideoEngagement } from "@/lib/video-analytics";
 
-function useInViewVideo() {
-  const ref = useRef<HTMLVideoElement>(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    if (typeof IntersectionObserver === "undefined") {
-      void el.play().catch(() => {});
-      return;
-    }
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry?.isIntersecting) void el.play().catch(() => {});
-        else el.pause();
-      },
-      { threshold: 0.2 },
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-  return ref;
-}
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -116,7 +99,8 @@ function Header() {
 }
 
 function Hero() {
-  const videoRef = useInViewVideo();
+  const videoRef = useVideoEngagement("hero_tamilnadu_monuments");
+  const small = useSmallScreen();
   return (
     <section
       id="home"
@@ -125,14 +109,15 @@ function Hero() {
       <video
         ref={videoRef}
         className="absolute inset-0 w-full h-full object-cover"
-        src={heroVideo.url}
-        poster={heroPoster}
+        src={small ? heroSmall.url : heroLarge.url}
+        poster={heroPosterAsset.url}
         preload="none"
         loop
         muted
         playsInline
         aria-hidden="true"
       />
+
 
       <div className="absolute inset-0 bg-gradient-to-b from-background/85 via-background/70 to-background z-[1]" />
       <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/40 to-transparent z-[1]" />
@@ -380,16 +365,22 @@ function SecureReel() {
   );
 }
 
-function SlateCard({ p }: { p: { tag: string; title: string; meta: string; desc: string; video: string } }) {
-  const videoRef = useInViewVideo();
+function SlateCard({
+  p,
+}: {
+  p: { id: string; tag: string; title: string; meta: string; desc: string; sm: string; lg: string };
+}) {
+  const videoRef = useVideoEngagement(p.id);
+  const small = useSmallScreen();
   return (
     <article className="group rounded-lg border border-border bg-background/60 overflow-hidden hover:border-gold/50 transition-colors">
       <div className="relative aspect-[4/5] overflow-hidden bg-gradient-to-br from-background via-card to-background">
         <video
           ref={videoRef}
           className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-60 transition-opacity"
-          src={p.video}
+          src={small ? p.sm : p.lg}
           preload="none"
+
           loop
           muted
           playsInline
@@ -414,27 +405,34 @@ function SlateCard({ p }: { p: { tag: string; title: string; meta: string; desc:
 function Slate() {
   const projects = [
     {
+      id: "slate_anthology",
       tag: "Flagship · In Development",
       title: "Untitled Crime Anthology",
       meta: "Tamil · 6–8 Episodes · OTT",
       desc: "A four-story crime anthology — shot end-to-end under the SecureReel stack. Every script, daily and screener is watermarked and traced. Zero-leak by design.",
-      video: slateAnthology.url,
+      lg: anthologyLarge.url,
+      sm: anthologySmall.url,
     },
     {
+      id: "slate_webseries",
       tag: "Web Series",
       title: "Regional Originals",
       meta: "Digital-First · Tamil Nadu",
       desc: "Tight, character-driven web series produced with lean crews, real locations, and full end-to-end SecureReel protection from script room to release.",
-      video: slateWebseries.url,
+      lg: webseriesLarge.url,
+      sm: webseriesSmall.url,
     },
     {
+      id: "slate_feature",
       tag: "Feature Slate",
       title: "Small-Budget Cinema",
       meta: "Theatrical + OTT · Regional",
       desc: "A curated slate of small-budget regional features — thrillers and drama first. Every production is a live proof-of-concept for the SecureReel platform.",
-      video: slateFeature.url,
+      lg: featureLarge.url,
+      sm: featureSmall.url,
     },
   ];
+
   return (
     <section id="slate" className="py-28 md:py-36 bg-card/30 border-y border-border/60">
 
