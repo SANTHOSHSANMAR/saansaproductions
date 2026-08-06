@@ -116,22 +116,24 @@ function Header() {
 }
 
 function Hero() {
+  const videoRef = useInViewVideo();
   return (
     <section
       id="home"
       className="film-grain vignette relative min-h-screen flex items-center overflow-hidden pt-24 sm:pt-28 md:pt-32"
     >
       <video
+        ref={videoRef}
         className="absolute inset-0 w-full h-full object-cover"
         src={heroVideo.url}
         poster={heroPoster}
-        preload="metadata"
-        autoPlay
+        preload="none"
         loop
         muted
         playsInline
         aria-hidden="true"
       />
+
       <div className="absolute inset-0 bg-gradient-to-b from-background/85 via-background/70 to-background z-[1]" />
       <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/40 to-transparent z-[1]" />
 
