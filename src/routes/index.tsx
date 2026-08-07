@@ -534,8 +534,8 @@ function Contact() {
           we'll get back with a proposal within 24 hours.
         </p>
         <div className="flex flex-wrap justify-center gap-4 mb-16">
-          <a href="mailto:hello@saansaproductions.com" className="btn-cinematic">
-            hello@saansaproductions.com
+          <a href="mailto:ceo@saansaproductions.com" className="btn-cinematic">
+            ceo@saansaproductions.com
           </a>
           <a href="#slate" className="btn-ghost-gold">
             View Slate
