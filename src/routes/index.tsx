@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import logoAsset from "../assets/saansa-productions-logo.png.asset.json";
-import heroLarge from "../assets/hero-tn-1280.mp4.asset.json";
-import heroSmall from "../assets/hero-tn-640.mp4.asset.json";
-import heroPosterAsset from "../assets/hero-tn-poster.jpg.asset.json";
+import heroLarge from "../assets/hero-chennai-1280.mp4.asset.json";
+import heroSmall from "../assets/hero-chennai-640.mp4.asset.json";
+import heroPosterAsset from "../assets/hero-chennai-poster.jpg.asset.json";
 import anthologyLarge from "../assets/slate-anthology-1280.mp4.asset.json";
 import anthologySmall from "../assets/slate-anthology-640.mp4.asset.json";
 import webseriesLarge from "../assets/slate-webseries-1280.mp4.asset.json";
