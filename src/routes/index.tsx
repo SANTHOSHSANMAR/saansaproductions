@@ -1,14 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import logoAsset from "../assets/saansa-productions-logo.png.asset.json";
-import heroLarge from "../assets/hero-chennai-1280.mp4.asset.json";
-import heroSmall from "../assets/hero-chennai-640.mp4.asset.json";
-import heroPosterAsset from "../assets/hero-chennai-poster.jpg.asset.json";
-import anthologyLarge from "../assets/slate-anthology-1280.mp4.asset.json";
-import anthologySmall from "../assets/slate-anthology-640.mp4.asset.json";
-import webseriesLarge from "../assets/slate-webseries-1280.mp4.asset.json";
-import webseriesSmall from "../assets/slate-webseries-640.mp4.asset.json";
-import featureLarge from "../assets/slate-feature-1280.mp4.asset.json";
-import featureSmall from "../assets/slate-feature-640.mp4.asset.json";
+import heroLarge from "../assets/hero-film-production.mp4.asset.json";
+import heroSmall from "../assets/hero-film-production-mobile.mp4.asset.json";
+import heroPosterAsset from "../assets/hero-film-production-poster.jpg.asset.json";
+import anthologyLarge from "../assets/slate-anthology-production.mp4.asset.json";
+import anthologySmall from "../assets/slate-anthology-production-mobile.mp4.asset.json";
+import webseriesLarge from "../assets/slate-webseries-production.mp4.asset.json";
+import webseriesSmall from "../assets/slate-webseries-production-mobile.mp4.asset.json";
+import featureLarge from "../assets/slate-feature-production.mp4.asset.json";
+import featureSmall from "../assets/slate-feature-production-mobile.mp4.asset.json";
 import { useSmallScreen, useVideoEngagement } from "@/lib/video-analytics";
 
 
