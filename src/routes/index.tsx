@@ -1,14 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import logoAsset from "../assets/saansa-productions-logo.png.asset.json";
-import heroLarge from "../assets/hero-film-production.mp4.asset.json";
-import heroSmall from "../assets/hero-film-production-mobile.mp4.asset.json";
-import heroPosterAsset from "../assets/hero-film-production-poster.jpg.asset.json";
-import anthologyLarge from "../assets/slate-anthology-production.mp4.asset.json";
-import anthologySmall from "../assets/slate-anthology-production-mobile.mp4.asset.json";
-import webseriesLarge from "../assets/slate-webseries-production.mp4.asset.json";
-import webseriesSmall from "../assets/slate-webseries-production-mobile.mp4.asset.json";
-import featureLarge from "../assets/slate-feature-production.mp4.asset.json";
-import featureSmall from "../assets/slate-feature-production-mobile.mp4.asset.json";
+import heroLarge from "../assets/hero-studio.mp4.asset.json";
+import heroSmall from "../assets/hero-studio-mobile.mp4.asset.json";
+import heroPosterAsset from "../assets/hero-studio-poster.jpg.asset.json";
+import anthologyLarge from "../assets/slate-anthology.mp4.asset.json";
+import anthologySmall from "../assets/slate-anthology-mobile.mp4.asset.json";
+import webseriesLarge from "../assets/slate-webseries.mp4.asset.json";
+import webseriesSmall from "../assets/slate-webseries-mobile.mp4.asset.json";
+import featureLarge from "../assets/slate-feature.mp4.asset.json";
+import featureSmall from "../assets/slate-feature-mobile.mp4.asset.json";
 import { useSmallScreen, useVideoEngagement } from "@/lib/video-analytics";
 
 
@@ -58,6 +58,8 @@ function Index() {
       <Slate />
       <WhyUs />
       <Process />
+      <Resources />
+
       <Contact />
       <Footer />
     </div>
@@ -521,7 +523,29 @@ function Process() {
   );
 }
 
+function Resources() {
+  return (
+    <section id="resources" className="py-10 border-b border-border/60">
+      <div className="mx-auto max-w-7xl px-6">
+        <h2 className="text-xs tracking-[0.35em] uppercase text-gold mb-2">Resources</h2>
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          <a
+            href="https://investorlist.com"
+            target="_blank"
+            rel="nofollow sponsored noopener"
+            className="underline underline-offset-4 decoration-border hover:text-gold transition-colors"
+          >
+            Investorlist.com — downloadable, curated lists of active startup investors, angels, VCs,
+            and family offices
+          </a>
+        </p>
+      </div>
+    </section>
+  );
+}
+
 function Contact() {
+
   return (
     <section id="contact" className="py-28 md:py-36">
       <div className="mx-auto max-w-5xl px-6 text-center">
