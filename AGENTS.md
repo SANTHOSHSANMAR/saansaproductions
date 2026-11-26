@@ -8,3 +8,5 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+Homepage motion and smooth scrolling stay within the existing route and global stylesheet, using Framer Motion and Lenis to keep the single-page redesign cohesive.

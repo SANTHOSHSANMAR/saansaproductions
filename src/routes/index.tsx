@@ -1,4 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
+import {
+  AnimatePresence,
+  motion,
+  useMotionValue,
+  useReducedMotion,
+  useScroll,
+  useSpring,
+  useTransform,
+} from "framer-motion";
+import Lenis from "lenis";
+import { ArrowDown, ArrowUpRight, Clapperboard, CircleDollarSign, FileCheck2, MapPin, Menu, MonitorPlay, ShieldCheck, X } from "lucide-react";
+import { useEffect, useRef, useState, type MouseEvent as ReactMouseEvent, type ReactNode } from "react";
+import { Button } from "@/components/ui/button";
 import logoAsset from "../assets/saansa-productions-logo.png.asset.json";
 import heroLarge from "../assets/hero-studio.mp4.asset.json";
 import heroSmall from "../assets/hero-studio-mobile.mp4.asset.json";
@@ -46,63 +59,366 @@ const nav = [
   { label: "Contact", href: "#contact" },
 ];
 
+const easing = [0.22, 1, 0.36, 1] as const;
+
 function Index() {
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <Header />
-      <Hero />
-      <TrustBar />
-      <About />
-      <Divisions />
-      <SecureReel />
-      <Slate />
-      <WhyUs />
-      <Process />
-      <Resources />
+    <>
+      <SmoothScrolling />
+      <Preloader />
+      <DesktopCursor />
+      <div className="cinematic-site min-h-screen bg-background text-foreground">
+        <Header />
+        <Hero />
+        <TrustBar />
+        <About />
+        <Divisions />
+        <SecureReel />
+        <Slate />
+        <WhyUs />
+        <Process />
+        <Resources />
+        <Contact />
+        <Footer />
+      </div>
+    </>
+  );
+}
 
-      <Contact />
-      <Footer />
-    </div>
+function SmoothScrolling() {
+  const reducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    if (reducedMotion) return;
+
+    const lenis = new Lenis({ lerp: 0.085, wheelMultiplier: 0.9, anchors: true });
+    let frame = 0;
+    const animate = (time: number) => {
+      lenis.raf(time);
+      frame = window.requestAnimationFrame(animate);
+    };
+    frame = window.requestAnimationFrame(animate);
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      lenis.destroy();
+    };
+  }, [reducedMotion]);
+
+  return null;
+}
+
+function Preloader() {
+  const [visible, setVisible] = useState(true);
+  const [count, setCount] = useState(3);
+  const reducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    if (!reducedMotion) {
+      const countdown = window.setInterval(() => {
+        setCount((current) => Math.max(1, current - 1));
+      }, 310);
+      const finish = window.setTimeout(() => setVisible(false), 1_120);
+      return () => {
+        window.clearInterval(countdown);
+        window.clearTimeout(finish);
+      };
+    }
+
+    const finish = window.setTimeout(() => setVisible(false), 0);
+    return () => window.clearTimeout(finish);
+  }, [reducedMotion]);
+
+  return (
+    <AnimatePresence>
+      {visible && (
+        <motion.div
+          className="cinema-preloader"
+          initial={reducedMotion ? false : { opacity: 1 }}
+          exit={reducedMotion ? { opacity: 0 } : { y: "-100%" }}
+          transition={{ duration: reducedMotion ? 0 : 0.62, ease: easing }}
+          role="status"
+          aria-label="Loading SAANSA Productions"
+        >
+          <motion.img
+            src={logoAsset.url}
+            alt=""
+            className="preloader-logo"
+            initial={reducedMotion ? false : { opacity: 0, scale: 0.94 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.65, ease: easing }}
+          />
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.span
+              key={count}
+              className="preloader-count font-display"
+              initial={reducedMotion ? false : { opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={reducedMotion ? undefined : { opacity: 0, y: -12 }}
+              transition={{ duration: 0.25, ease: easing }}
+              aria-hidden="true"
+            >
+              {count}
+            </motion.span>
+          </AnimatePresence>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
+function DesktopCursor() {
+  const reducedMotion = useReducedMotion();
+  const x = useMotionValue(-40);
+  const y = useMotionValue(-40);
+  const smoothX = useSpring(x, { stiffness: 500, damping: 38, mass: 0.3 });
+  const smoothY = useSpring(y, { stiffness: 500, damping: 38, mass: 0.3 });
+  const [enabled, setEnabled] = useState(false);
+  const [active, setActive] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia("(hover: hover) and (pointer: fine) and (min-width: 1024px)");
+    const update = () => setEnabled(media.matches && !reducedMotion);
+    update();
+    media.addEventListener("change", update);
+
+    const onMove = (event: PointerEvent) => {
+      x.set(event.clientX);
+      y.set(event.clientY);
+    };
+    const isInteractive = (target: EventTarget | null) =>
+      target instanceof Element && Boolean(target.closest("a, button, video, [data-cursor]"));
+    const onOver = (event: PointerEvent) => setActive(isInteractive(event.target));
+    const onOut = (event: PointerEvent) => {
+      if (isInteractive(event.target)) setActive(false);
+    };
+    window.addEventListener("pointermove", onMove, { passive: true });
+    window.addEventListener("pointerover", onOver, { passive: true });
+    window.addEventListener("pointerout", onOut, { passive: true });
+
+    return () => {
+      media.removeEventListener("change", update);
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerover", onOver);
+      window.removeEventListener("pointerout", onOut);
+    };
+  }, [reducedMotion, x, y]);
+
+  if (!enabled || reducedMotion) return null;
+
+  return (
+    <>
+      <motion.div
+        className="cinema-cursor-ring"
+        style={{ x: smoothX, y: smoothY }}
+        animate={{ scale: active ? 1.6 : 1, opacity: active ? 0.9 : 0.55 }}
+        transition={{ duration: 0.22, ease: easing }}
+        aria-hidden="true"
+      />
+      <motion.div
+        className="cinema-cursor-dot"
+        style={{ x, y }}
+        animate={{ scale: active ? 0.65 : 1 }}
+        transition={{ duration: 0.18, ease: easing }}
+        aria-hidden="true"
+      />
+    </>
+  );
+}
+
+function Reveal({ children, className, delay = 0 }: { children: ReactNode; className?: string; delay?: number }) {
+  const reducedMotion = useReducedMotion();
+
+  return (
+    <motion.div
+      className={className}
+      initial={reducedMotion ? false : { opacity: 0, y: 26 }}
+      whileInView={reducedMotion ? undefined : { opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.16 }}
+      transition={{ duration: 0.72, delay, ease: easing }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+function MagneticLink({ href, className, children }: { href: string; className: string; children: ReactNode }) {
+  const reducedMotion = useReducedMotion();
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const springX = useSpring(x, { stiffness: 220, damping: 16 });
+  const springY = useSpring(y, { stiffness: 220, damping: 16 });
+
+  const onMouseMove = (event: ReactMouseEvent<HTMLAnchorElement>) => {
+    if (reducedMotion) return;
+    const bounds = event.currentTarget.getBoundingClientRect();
+    x.set((event.clientX - bounds.left - bounds.width / 2) * 0.12);
+    y.set((event.clientY - bounds.top - bounds.height / 2) * 0.12);
+  };
+
+  return (
+    <motion.a
+      href={href}
+      className={className}
+      onMouseMove={onMouseMove}
+      onMouseLeave={() => {
+        x.set(0);
+        y.set(0);
+      }}
+      style={{ x: springX, y: springY }}
+      whileHover={reducedMotion ? undefined : { scale: 1.025 }}
+    >
+      {children}
+    </motion.a>
+  );
+}
+
+function MaskedWord({ children, delay = 0, className = "" }: { children: ReactNode; delay?: number; className?: string }) {
+  const reducedMotion = useReducedMotion();
+
+  return (
+    <span className="inline-block overflow-hidden align-bottom py-[0.04em]">
+      <motion.span
+        className={`inline-block ${className}`}
+        initial={reducedMotion ? false : { y: "110%", opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.78, delay, ease: easing }}
+      >
+        {children}
+      </motion.span>
+    </span>
+  );
+}
+
+function TiltCard({ children, className }: { children: ReactNode; className: string }) {
+  const reducedMotion = useReducedMotion();
+  const rotateX = useMotionValue(0);
+  const rotateY = useMotionValue(0);
+  const springX = useSpring(rotateX, { stiffness: 180, damping: 22 });
+  const springY = useSpring(rotateY, { stiffness: 180, damping: 22 });
+
+  const onMouseMove = (event: ReactMouseEvent<HTMLDivElement>) => {
+    if (reducedMotion) return;
+    const bounds = event.currentTarget.getBoundingClientRect();
+    rotateX.set(((event.clientY - bounds.top) / bounds.height - 0.5) * -3.5);
+    rotateY.set(((event.clientX - bounds.left) / bounds.width - 0.5) * 4);
+  };
+
+  return (
+    <motion.div
+      className={className}
+      onMouseMove={onMouseMove}
+      onMouseLeave={() => {
+        rotateX.set(0);
+        rotateY.set(0);
+      }}
+      style={{ rotateX: springX, rotateY: springY, transformPerspective: 1100 }}
+      whileHover={reducedMotion ? undefined : { y: -4 }}
+    >
+      {children}
+    </motion.div>
   );
 }
 
 function Header() {
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const reducedMotion = useReducedMotion();
+  const { scrollYProgress } = useScroll();
+  const progress = useSpring(scrollYProgress, { stiffness: 90, damping: 24, mass: 0.25 });
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-background/70 border-b border-gold/20">
-      <div className="mx-auto max-w-7xl px-3 sm:px-5 md:px-6 h-20 sm:h-24 md:h-28 lg:h-32 flex items-center justify-between gap-2 sm:gap-4">
-        <a href="#home" className="flex items-center shrink-0" aria-label="SAANSA Productions home">
+    <>
+      <motion.div className="scroll-progress" style={{ scaleX: progress }} aria-hidden="true" />
+      <header className={`site-header ${scrolled ? "site-header-scrolled" : ""}`}>
+        <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-3 px-4 transition-[height] duration-500 sm:px-6 xl:h-24">
+          <a href="#home" className="flex shrink-0 items-center" aria-label="SAANSA Productions home">
           <img
             src={logoAsset.url}
             alt="SAANSA Productions"
-            className="logo-glow h-16 w-16 sm:h-20 sm:w-20 md:h-24 md:w-24 lg:h-28 lg:w-28 xl:h-32 xl:w-32 object-contain"
+              className={`logo-glow object-contain transition-[width,height] duration-500 ${scrolled ? "h-14 w-14 sm:h-16 sm:w-16" : "h-16 w-16 sm:h-20 sm:w-20 xl:h-22 xl:w-22"}`}
           />
-        </a>
+          </a>
 
-        <nav className="hidden lg:flex items-center gap-6 xl:gap-9">
-          {nav.map((n) => (
-            <a
-              key={n.href}
-              href={n.href}
-              className="relative text-[13px] tracking-[0.2em] uppercase text-foreground/75 hover:text-gold transition-colors after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-px after:w-0 after:bg-gold after:transition-all hover:after:w-full"
-            >
-              {n.label}
-            </a>
-          ))}
-        </nav>
-        <a
-          href="#contact"
-          className="hidden md:inline-flex btn-cinematic !py-2.5 !px-5 !text-[11px]"
-        >
-          Get in Touch
-        </a>
-      </div>
-    </header>
+          <nav className="hidden items-center gap-5 xl:flex 2xl:gap-7" aria-label="Main navigation">
+            {nav.map((n) => (
+              <a key={n.href} href={n.href} className="nav-link">
+                {n.label}
+              </a>
+            ))}
+          </nav>
+          <a href="#contact" className="header-contact hidden xl:inline-flex">
+            Get in Touch
+          </a>
+          <Button
+            type="button"
+            variant="outline"
+            size="icon"
+            className="nav-menu-trigger xl:hidden"
+            aria-label={menuOpen ? "Close navigation" : "Open navigation"}
+            aria-expanded={menuOpen}
+            aria-controls="mobile-navigation"
+            onClick={() => setMenuOpen((open) => !open)}
+          >
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.span
+                key={menuOpen ? "close" : "open"}
+                initial={reducedMotion ? false : { opacity: 0, rotate: -35, scale: 0.85 }}
+                animate={{ opacity: 1, rotate: 0, scale: 1 }}
+                exit={reducedMotion ? undefined : { opacity: 0, rotate: 35, scale: 0.85 }}
+                transition={{ duration: 0.18, ease: easing }}
+                className="flex"
+              >
+                {menuOpen ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
+              </motion.span>
+            </AnimatePresence>
+          </Button>
+        </div>
+      </header>
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.nav
+            id="mobile-navigation"
+            className="mobile-navigation xl:hidden"
+            aria-label="Mobile navigation"
+            initial={reducedMotion ? false : { opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={reducedMotion ? { opacity: 0 } : { opacity: 0 }}
+            transition={{ duration: reducedMotion ? 0 : 0.25, ease: easing }}
+          >
+            <div className="mobile-navigation-links">
+              {nav.map((item, index) => (
+                <motion.a
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setMenuOpen(false)}
+                  initial={reducedMotion ? false : { opacity: 0, y: 18 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.45, delay: reducedMotion ? 0 : index * 0.055, ease: easing }}
+                >
+                  {item.label}
+                  <ArrowUpRight aria-hidden="true" />
+                </motion.a>
+              ))}
+            </div>
+          </motion.nav>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
 
 function Hero() {
   const videoRef = useVideoEngagement("hero_tamilnadu_monuments");
   const small = useSmallScreen();
+  const reducedMotion = useReducedMotion();
   return (
     <section
       id="home"
@@ -121,10 +437,10 @@ function Hero() {
       />
 
 
-      <div className="absolute inset-0 bg-gradient-to-b from-background/85 via-background/70 to-background z-[1]" />
-      <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/40 to-transparent z-[1]" />
+      <div className="absolute inset-0 z-[1] bg-gradient-to-b from-background/85 via-background/70 to-background" />
+      <div className="absolute inset-0 z-[1] bg-gradient-to-r from-background/90 via-background/40 to-transparent" />
 
-      <div className="relative z-10 mx-auto max-w-7xl px-6 py-24 w-full">
+      <div className="relative z-10 mx-auto w-full max-w-7xl px-5 py-24 sm:px-6 sm:py-28">
         <div className="max-w-3xl">
           <div className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/5 px-4 py-1.5 mb-8">
             <span className="h-1.5 w-1.5 rounded-full bg-gold animate-pulse" />
@@ -132,23 +448,28 @@ function Hero() {
               Based in Tamil Nadu · India
             </span>
           </div>
-          <h1 className="font-display text-5xl md:text-7xl lg:text-8xl leading-[1.02] font-medium">
-            Cinema, produced with
-            <span className="italic text-gold"> zero-leak </span>
-            precision.
+          <h1 className="hero-headline font-display text-5xl font-medium leading-[1.02] sm:text-6xl md:text-7xl xl:text-8xl" aria-label="Cinema, produced with zero-leak precision.">
+            <span className="block"><MaskedWord delay={0.04}>Cinema,</MaskedWord>{" "}<MaskedWord delay={0.1}>produced</MaskedWord>{" "}<MaskedWord delay={0.16}>with</MaskedWord></span>
+            <span className="block"><MaskedWord delay={0.23} className="italic text-gold">zero-leak</MaskedWord></span>
+            <span className="block"><MaskedWord delay={0.3}>precision.</MaskedWord></span>
           </h1>
-          <p className="mt-8 text-lg text-foreground/80 max-w-2xl leading-relaxed">
+          <motion.p
+            className="mt-8 max-w-2xl text-lg leading-relaxed text-foreground/80"
+            initial={reducedMotion ? false : { opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: reducedMotion ? 0 : 0.75, ease: easing }}
+          >
             SAANSA Productions is a next-generation film production house — where every script,
             daily, and screener is protected by <span className="text-gold">SecureReel</span>, our
             proprietary end-to-end chain-of-custody platform for film content.
-          </p>
+          </motion.p>
           <div className="mt-10 flex flex-wrap gap-4">
-            <a href="#contact" className="btn-cinematic">
+            <MagneticLink href="#contact" className="btn-cinematic">
               Start a Project <span aria-hidden>→</span>
-            </a>
-            <a href="#securereel" className="btn-ghost-gold">
+            </MagneticLink>
+            <MagneticLink href="#securereel" className="btn-ghost-gold">
               Explore SecureReel
-            </a>
+            </MagneticLink>
           </div>
 
           <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl">
@@ -158,25 +479,39 @@ function Hero() {
               { k: "Zero", v: "Leak Guarantee" },
               { k: "24 hrs", v: "Proposal Turnaround" },
             ].map((s) => (
-              <div key={s.k} className="border-l border-gold/40 pl-4">
+              <motion.div
+                key={s.k}
+                className="border-l border-gold/40 pl-4"
+                initial={reducedMotion ? false : { opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.55, delay: reducedMotion ? 0 : 0.95 + index * 0.08, ease: easing }}
+              >
                 <div className="font-display text-2xl md:text-3xl text-gold">{s.k}</div>
                 <div className="text-[11px] tracking-[0.2em] uppercase text-muted-foreground mt-1">
                   {s.v}
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
       </div>
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-[10px] tracking-[0.4em] text-muted-foreground uppercase z-10">
-        Scroll
-      </div>
+      <a href="#about" className="scroll-cue" aria-label="Scroll to About">
+        <span>Scroll</span>
+        <motion.span
+          className="scroll-cue-line"
+          aria-hidden="true"
+          animate={reducedMotion ? undefined : { scaleY: [0.5, 1, 0.5], opacity: [0.4, 1, 0.4] }}
+          transition={{ duration: 1.7, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <ArrowDown size={14} aria-hidden="true" />
+      </a>
     </section>
   );
 }
 
 function TrustBar() {
   const items = [
+    "Built-In Security",
     "Watermarking",
     "Encrypted Dailies",
     "AI Leak Detection",
@@ -184,16 +519,25 @@ function TrustBar() {
     "OTT-Ready",
     "Tamil · Regional",
   ];
+  const reducedMotion = useReducedMotion();
   return (
-    <div className="border-y border-border/60 bg-card/30">
-      <div className="mx-auto max-w-7xl px-6 py-6 flex flex-wrap items-center justify-center gap-x-10 gap-y-3">
-        <span className="text-xs tracking-[0.3em] uppercase text-gold">Built-In Security</span>
-        {items.map((i) => (
-          <span key={i} className="text-sm text-foreground/70">
-            {i}
-          </span>
+    <div className="trust-ticker border-y border-border/60 bg-card/30" aria-label="Built-In Security, Watermarking, Encrypted Dailies, AI Leak Detection, Blockchain Audit, OTT-Ready, Tamil · Regional">
+      <motion.div
+        className="trust-ticker-track"
+        animate={reducedMotion ? undefined : { x: ["0%", "-50%"] }}
+        transition={{ duration: 38, repeat: Infinity, ease: "linear" }}
+        aria-hidden="true"
+      >
+        {[0, 1].map((copy) => (
+          <div key={copy} className="trust-ticker-set">
+            {items.map((item, index) => (
+              <span key={`${copy}-${item}`} className={index === 0 ? "text-gold" : "text-foreground/70"}>
+                {item}<span className="ticker-separator" aria-hidden="true">·</span>
+              </span>
+            ))}
+          </div>
         ))}
-      </div>
+      </motion.div>
     </div>
   );
 }

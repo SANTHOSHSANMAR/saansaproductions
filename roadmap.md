@@ -1,0 +1,3 @@
+- [ ] Refresh the homepage with the uploaded cinematic design while preserving its current copy, links, logo, and videos.
+- [ ] Verify desktop and mobile behavior, reduced-motion support, and the homepage build.
+- [ ] Complete the required package security-version update.
